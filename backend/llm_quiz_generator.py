@@ -8,7 +8,7 @@ from typing import Dict, Any
 # Try to import LangChain + Gemini integration. If unavailable, fall back to a
 # local deterministic generator so the backend is runnable without external API keys.
 
-USE_GEMINI = bool(os.getenv("AIzaSyCiDZKp5Q-0UXMIRJilEc6Z8WlqxlRVU1E"))
+USE_GEMINI_API = bool(os.getenv("AIzaSyCiDZKp5Q-0UXMIRJilEc6Z8WlqxlRVU1E"))
 
 
 def _simple_sentence_split(text: str):
