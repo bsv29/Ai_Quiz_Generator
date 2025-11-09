@@ -5,7 +5,54 @@ An intelligent quiz generator that creates multiple-choice quizzes from Wikipedi
 ## 🔗 Links
 
 - **GitHub Repository**: [https://github.com/bsv29/Ai_Quiz_Generator](https://github.com/bsv29/Ai_Quiz_Generator)
-- **Live Demo**: [Coming Soon] (Deploy link will be added here)
+- **Live Demo**: [Deploy your app using the instructions below]
+
+## 🚀 Deployment
+
+### Frontend Deployment (Vercel/Netlify)
+
+1. **Vercel**:
+   - Push your code to GitHub
+   - Go to [vercel.com](https://vercel.com) and import your repository
+   - Set the root directory to `frontend`
+   - Set build command: `npm run build`
+   - Set output directory: `dist`
+   - Add environment variable: `VITE_API_URL` = your backend URL
+
+2. **Netlify**:
+   - Push your code to GitHub
+   - Go to [netlify.com](https://netlify.com) and import your repository
+   - Set base directory: `frontend`
+   - Set build command: `npm run build`
+   - Set publish directory: `frontend/dist`
+   - Add environment variable: `VITE_API_URL` = your backend URL
+
+### Backend Deployment (Railway/Render/Heroku)
+
+1. **Railway**:
+   - Push your code to GitHub
+   - Go to [railway.app](https://railway.app) and create a new project
+   - Connect your GitHub repository
+   - Set the root directory to `backend`
+   - Install dependencies: `pip install -r requirements.txt`
+   - Start command: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - Add environment variables: `GEMINI_API_KEY` (optional)
+
+2. **Render**:
+   - Push your code to GitHub
+   - Go to [render.com](https://render.com) and create a new Web Service
+   - Connect your GitHub repository
+   - Set root directory: `backend`
+   - Build command: `pip install -r requirements.txt`
+   - Start command: `uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - Add environment variables as needed
+
+3. **Heroku**:
+   - Install Heroku CLI and login
+   - Create a `Procfile` in the backend directory: `web: uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - Run: `heroku create your-app-name`
+   - Set config vars: `heroku config:set GEMINI_API_KEY=your_key`
+   - Deploy: `git push heroku main`
 
 ## 📸 Screenshots
 
