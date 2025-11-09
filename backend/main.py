@@ -59,9 +59,29 @@ class GenerateRequest(BaseModel):
 
 @app.post("/generate_quiz")
 def generate_quiz(req: GenerateRequest, db: Session = Depends(get_db)):
-    url = req.url
+    url = req.url.strip()
+    
+    # Basic URL validation
+    if not url:
+        raise HTTPException(status_code=400, detail="URL cannot be empty")
+    
+    if not url.startswith(('http://', 'https://')):
+        raise HTTPException(
+            status_code=400, 
+            detail="Invalid URL format. Please include http:// or https://"
+        )
+    
     try:
         title, clean_text = scrape_wikipedia(url)
+    except ValueError as e:
+        # User-friendly validation errors
+        raise HTTPException(status_code=400, detail=str(e))
+    except ConnectionError as e:
+        # Connection errors
+        raise HTTPException(
+            status_code=503, 
+            detail=f"Unable to connect to Wikipedia. Please check your internet connection and try again. Error: {str(e)}"
+        )
     except Exception as e:
         # Log full traceback to a file for debugging
         tb = traceback.format_exc()
@@ -69,8 +89,8 @@ def generate_quiz(req: GenerateRequest, db: Session = Depends(get_db)):
         with open(log_path, 'a', encoding='utf-8') as f:
             f.write(f"--- SCRAPE ERROR for URL: {url} ---\n")
             f.write(tb + "\n")
-        error_msg = f"Failed to scrape URL: {str(e)}"
-        raise HTTPException(status_code=400, detail=error_msg)
+        error_msg = f"An unexpected error occurred while processing the URL: {str(e)}"
+        raise HTTPException(status_code=500, detail=error_msg)
 
     generator = LLMQuizGenerator()
     quiz = generator.generate_quiz(title, clean_text, num_questions=6)

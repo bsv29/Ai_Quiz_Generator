@@ -9,18 +9,39 @@ export default function GenerateQuizTab() {
   const [quiz, setQuiz] = useState(null)
   const [error, setError] = useState(null)
 
+  const validateUrl = (url) => {
+    if (!url.trim()) {
+      return 'Please enter a Wikipedia URL'
+    }
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      return 'URL must start with http:// or https://'
+    }
+    if (!url.includes('wikipedia.org')) {
+      return 'Please provide a valid Wikipedia URL (e.g., https://en.wikipedia.org/wiki/Article_Name)'
+    }
+    if (!url.includes('/wiki/')) {
+      return 'Invalid Wikipedia URL format. It should be: https://en.wikipedia.org/wiki/Article_Name'
+    }
+    return null
+  }
+
   const onSubmit = async (e) => {
     e.preventDefault()
     setError(null)
-    if (!url) {
-      setError('Please enter a Wikipedia URL')
+    setQuiz(null)
+    
+    // Client-side validation
+    const validationError = validateUrl(url)
+    if (validationError) {
+      setError(validationError)
       return
     }
+    
     setLoading(true)
-    setQuiz(null)
     try {
-      const data = await apiGenerate(url)
+      const data = await apiGenerate(url.trim())
       setQuiz(data)
+      setError(null) // Clear any previous errors
     } catch (err) {
       setError(err.message || 'Failed to generate quiz')
     } finally {
